@@ -1,11 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oppdag Norge</title>
+    <link rel="stylesheet" href="/Databasenettside/css/stylesheet.css">
 </head>
 <body>
-    
+    <header>
+        <div class="container">
+            <a href="#home" class="logo-link"><img src="/Databasenettside/bilder/logo.png" alt="Oppdag Norge" class="logo"></a>
+            <nav>
+                <ul>
+                    <li><a href="#home">Hjem</a></li>
+                    <li><a href="#fjorder">Fjorder</a></li>
+                    <li><a href="#fjell">Fjell</a></li>
+                    <li><a href="#byer">Byer</a></li>
+                    <li><a href="om-oss.html">Om Oss</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="home" class="hero-section">
+            <div class="hero-text">
+                <h1>Velkommen</h1>
+            </div>
+        </section>
+        <section id="fjorder" class="content-section">
+            <div class="text right">
+                <h2>Utforsk Fjorder</h2>
+                <p>De norske fjordene er blant de mest spektakulære naturlige underverkene i verden. Med sine dype vann, bratte fjell og små landsbyer byr de på en magisk opplevelse.</p>
+            </div>
+            <img src="/Databasenettside/bilder/norgefjord.jpeg" alt="Fjorder i Norge" class="content-image left">
+        </section>
+        <section id="fjell" class="content-section">
+            <img src="/Databasenettside/bilder/preikestolen.jpg" alt="Fjellene i Norge" class="content-image right">
+            <div class="text left">
+                <h2>Besøk Fjellene</h2>
+                <p>Fjellene i Norge tilbyr utrolige turmuligheter, med alt fra Preikestolen til Galdhøpiggen. Enten du søker spenning eller stillhet, finner du det her.</p>
+            </div>
+        </section>
+        <section id="byer" class="content-section">
+            <div class="text right">
+                <h2>Oppdag Byer</h2>
+                <p>Utforsk livlige norske byer som Oslo, Bergen og Trondheim. Nyt kultur, historie og det moderne livet i noen av verdens vakreste byer.</p>
+            </div>
+            <img src="/Databasenettside/bilder/drammensentrum.jpg" alt="Byer i Norge" class="content-image left">
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Oppdag Norge</p>
+        <p>Oppdag Norge er dedikert til å vise frem Norges vakre landskap og rike kultur. Vi tilbyr reiseguider, tips og inspirasjon for å hjelpe deg med å oppdage alt Norge har å tilby.</p>
+    </footer>
+    <script>
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    </script>
 </body>
 </html>

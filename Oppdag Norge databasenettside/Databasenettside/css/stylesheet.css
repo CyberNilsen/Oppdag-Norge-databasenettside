@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+header {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 40px 50px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: padding 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+header.scrolled {
+    padding: 25px 40px;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+header .logo-link {
+    margin-right: auto;
+}
+
+header .logo {
+    height: 70px;
+    transition: height 0.3s;
+}
+
+header.scrolled .logo {
+    height: 60px;
+}
+
+nav {
+    margin-left: auto;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+    padding-right: 60px; /* Øker padding-right for å flytte navigasjonslinkene mer til høyre */
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #007BFF;
+}
+
+.hero-section {
+    position: relative;
+    height: calc(100vh - 70px);
+    background: url('/Databasenettside/bilder/skavanger.jpg') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.content-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 40px auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+.content-section .text {
+    flex: 1;
+    text-align: left;
+}
+
+.content-section .content-image {
+    flex: 1;
+    max-width: 45%;
+    height: auto;
+}
+
+.content-section .right {
+    order: 2;
+}
+
+.content-section .left {
+    order: 1;
+}
+
+footer {
+    background-color: #ffffff;
+    color: #000000;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
