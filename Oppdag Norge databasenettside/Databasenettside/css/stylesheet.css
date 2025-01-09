@@ -9,20 +9,18 @@ body {
 header {
     background-color: #ffffff;
     color: #000000;
-    padding: 40px 50px;
+    padding: 10px 10px;
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 1000;
-    transition: padding 0.3s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-}
-
-header.scrolled {
-    padding: 25px 40px;
+    justify-content: space-between;
+    height: 70px;
+    box-sizing: border-box;
 }
 
 header .container {
@@ -38,11 +36,7 @@ header .logo-link {
 
 header .logo {
     height: 70px;
-    transition: height 0.3s;
-}
-
-header.scrolled .logo {
-    height: 60px;
+    transition: height 0.3s ease;
 }
 
 nav {
@@ -56,7 +50,7 @@ nav ul {
     display: flex;
     justify-content: flex-end;
     flex-grow: 1;
-    padding-right: 60px; /* Øker padding-right for å flytte navigasjonslinkene mer til høyre */
+    padding-right: 10px;
 }
 
 nav ul li {
@@ -76,13 +70,15 @@ nav ul li a:hover {
 
 .hero-section {
     position: relative;
-    height: calc(100vh - 70px);
+    height: 100vh;
     background: url('/Databasenettside/bilder/skavanger.jpg') no-repeat center center/cover;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
     text-align: center;
+    overflow: hidden;
+    padding: 0;
 }
 
 .hero-text {
@@ -90,8 +86,10 @@ nav ul li a:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 48px;
+    font-size: 36px;
     font-weight: bold;
+    margin: 0;
+    z-index: 1;
 }
 
 .content-section {
@@ -116,18 +114,163 @@ nav ul li a:hover {
     height: auto;
 }
 
-.content-section .right {
-    order: 2;
-}
-
-.content-section .left {
-    order: 1;
-}
-
 footer {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #f8f8f8;
+    color: #333;
+    padding: 40px 20px;
     text-align: center;
-    padding: 20px;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+    margin: 20px;
+}
+
+.footer-column h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #007BFF;
+}
+
+.footer-column p, .footer-column ul {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.footer-column ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 5px;
+}
+
+.footer-column ul li a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.footer-column ul li a:hover {
+    color: #007BFF;
+}
+
+.social-icons img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.social-icons img:hover {
+    transform: scale(1.2);
+}
+
+.footer-bottom {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+#backToTop {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    display: none;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    transition: background-color 0.3s ease;
+}
+
+#backToTop:hover {
+    background-color: #0056b3;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2000;
+}
+
+.menu-toggle .bar {
+    width: 30px;
+    height: 4px;
+    background-color: #000;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 10px 20px;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    header .logo {
+        height: 50px;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+        position: absolute;
+        top: 60px; 
+        left: 0;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    nav.active ul {
+        display: flex;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    nav ul li a {
+        font-size: 18px;
+    }
+
+    .hero-text {
+        font-size: 28px;
+    }
+
+    #backToTop {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .menu-toggle {
+        display: flex;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
 }
