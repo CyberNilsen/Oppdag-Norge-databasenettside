@@ -71,7 +71,7 @@ nav ul li a:hover {
 .hero-section {
     position: relative;
     height: 100vh;
-    background: url('/Databasenettside/bilder/skavanger.jpg') no-repeat center center/cover;
+    background: url('../bilder/skavanger.jpg') no-repeat center center/cover;
     display: flex;
     justify-content: center;
     align-items: center;
