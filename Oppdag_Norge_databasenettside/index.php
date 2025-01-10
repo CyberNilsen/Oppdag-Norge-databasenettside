@@ -1,9 +1,18 @@
+<?php
+session_start();
+?>
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oppdag Norge</title>
+    <title>Hovedside</title>
     <link rel="icon" type="image/x-icon" href="Databasenettside/bilder/OppdagNorgemindre.png">
     <link rel="stylesheet" href="Databasenettside/css/stylesheet.css">
     
@@ -12,7 +21,7 @@
 <body>
     <header>
         <div class="container">
-            <a href="index.html" class="logo-link"><img src="Databasenettside/bilder/OppdagNorgemindre.png" alt="Oppdag Norge" class="logo"></a>
+            <a href="index.php" class="logo-link"><img src="Databasenettside/bilder/OppdagNorgemindre.png" alt="Oppdag Norge" class="logo"></a>
             
             
             <label id="menuToggle" class="menu-toggle" for="menuToggleCheckbox">
@@ -24,17 +33,20 @@
             
             
             <nav>
-                <ul>
-                    <li><a href="fjorder.html">Fjorder</a></li>
-                    <li><a href="fjell.html">Fjell</a></li>
-                    <li><a href="byer.html">Byer</a></li>
-                    <li><a href="om-oss.html">Om Oss</a></li>
-                    <li><a href="Databasenettside/htmlogphp/login.php">Login</a></li>
+    <ul>
+        <li><a href="fjorder.html">Fjorder</a></li>
+        <li><a href="fjell.html">Fjell</a></li>
+        <li><a href="byer.html">Byer</a></li>
+        <li><a href="om-oss.html">Om Oss</a></li>
+        <?php if (isset($_SESSION['user_email'])): ?>
+            <li><a href="Databasenettside/htmlogphp/profil.php">Profil</a></li>
+            <li><a href="databasenettside/htmlogphp/logut.php">Logg ut</a></li>
+        <?php else: ?>
+            <li><a href="Databasenettside/htmlogphp/login.php">Login</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
 
-                    
-
-                </ul>
-            </nav>
         </div>
     </header>
 
@@ -42,7 +54,8 @@
     <main>
         <section id="home" class="hero-section">
             <div class="hero-text">
-                <h1>Velkommen</h1>
+            <h1>Velkommen <?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?></h1>
+
             </div>
 
            
@@ -99,9 +112,9 @@
                 <div class="footer-column">
                     <h3>Følg Oss</h3>
                     <ul class="social-icons">
-                        <li><a href="https://facebook.com" target="_blank"><img src="/Databasenettside/bilder/Facebooklogo.webp" alt="Facebook"></a></li>
-                        <li><a href="https://instagram.com" target="_blank"><img src="/Databasenettside/bilder/Instagramlogo.webp" alt="Instagram"></a></li>
-                        <li><a href="https://twitter.com" target="_blank"><img src="/Databasenettside/bilder/Twitterlogo.png" alt="Twitter"></a></li>
+                        <li><a href="https://facebook.com" target="_blank"><img src="Databasenettside/bilder/Facebooklogo.webp" alt="Facebook"></a></li>
+                        <li><a href="https://instagram.com" target="_blank"><img src="Databasenettside/bilder/Instagramlogo.webp" alt="Instagram"></a></li>
+                        <li><a href="https://twitter.com" target="_blank"><img src="Databasenettside/bilder/Twitterlogo.png" alt="Twitter"></a></li>
                     </ul>
                 </div>
             </div>

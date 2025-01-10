@@ -9,7 +9,7 @@ body {
 header {
     background-color: #ffffff;
     color: #000000;
-    padding: 10px 10px;
+    padding: 15px 15px;
     position: fixed;
     width: 100%;
     top: 0;
@@ -19,7 +19,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
+    height: 80px;
     box-sizing: border-box;
 }
 
@@ -35,7 +35,7 @@ header .logo-link {
 }
 
 header .logo {
-    height: 70px;
+    height: 80px;
     transition: height 0.3s ease;
 }
 
@@ -50,17 +50,17 @@ nav ul {
     display: flex;
     justify-content: flex-end;
     flex-grow: 1;
-    padding-right: 10px;
+    padding-right: 20px;
 }
 
 nav ul li {
-    margin: 0 10px;
+    margin: 0 15px;
 }
 
 nav ul li a {
     color: #000000;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 22px;
     transition: color 0.3s;
 }
 

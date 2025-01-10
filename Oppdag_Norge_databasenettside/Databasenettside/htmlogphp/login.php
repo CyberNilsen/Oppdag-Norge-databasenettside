@@ -83,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             // Passordet er korrekt, logg inn brukeren
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
-            header("Location: dashboard.php");  // Redirect til dashboard etter vellykket pålogging
+            header("Location: ../../index.php");  // Redirect til dashboard etter vellykket pålogging
             exit();
         } else {
             $login_error = "Feil passord.";
@@ -110,16 +110,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 <body>
     <header>
         <div class="container">
-            <a href="../../index.html" class="logo-link"><img src="../bilder/OppdagNorgemindre.png" alt="Oppdag Norge" class="logo"></a>
+            <a href="../../index.php" class="logo-link"><img src="../bilder/OppdagNorgemindre.png" alt="Oppdag Norge" class="logo"></a>
             <nav>
-                <ul>
-                    <li><a href="fjorder.html">Fjorder</a></li>
-                    <li><a href="fjell.html">Fjell</a></li>
-                    <li><a href="byer.html">Byer</a></li>
-                    <li><a href="om-oss.html">Om Oss</a></li>
-                    <li><a href="../htmlogphp/login.php">Login</a></li>
-                </ul>
-            </nav>
+    <ul>
+        <li><a href="fjorder.html">Fjorder</a></li>
+        <li><a href="fjell.html">Fjell</a></li>
+        <li><a href="byer.html">Byer</a></li>
+        <li><a href="om-oss.html">Om Oss</a></li>
+        <?php if (isset($_SESSION['user_email'])): ?>
+            <li><a href="profil.php">Profil</a></li>
+            <li><a href="../htmlogphp/logut.php">Logg ut</a></li>
+        <?php else: ?>
+            <li><a href="Databasenettside/htmlogphp/login.php">Login</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
+
         </div>
     </header>
 
@@ -160,6 +166,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         </form>
         <p>Har du allerede en konto? <a href="#" id="switchToLogin">Logg inn</a></p>
     </div>
+
+    
+
 
     <script>
         const loginForm = document.getElementById('login-form');
