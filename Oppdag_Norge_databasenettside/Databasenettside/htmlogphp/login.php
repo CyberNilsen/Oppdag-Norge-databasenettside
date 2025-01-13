@@ -1,26 +1,24 @@
 <?php
-session_start();  // Starter en ny session eller gjenoppretter en eksisterende
+session_start();
 
-$login_error = '';  // Variabel for å lagre feilmeldinger ved pålogging
-$register_error = '';  // Variabel for registreringsfeil
-// Inkluder databaseforbindelsen
-require_once 'dbconfig.php';  // Sti til db_config.php hvis filen er plassert utenfor html-mappen
+$login_error = '';
+$register_error = '';
+$email_register = ''; 
+$email = ''; 
 
-// Håndterer registrering
+require_once 'dbconfig.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
-    // Hent data fra registreringsskjemaet
+    $name_register = $_POST['name_register'];
     $email_register = $_POST['email_register'];
     $password_register = $_POST['password_register'];
 
-    // Koble til databasen
     $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
-    // Sjekk om forbindelsen til databasen er vellykket
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Sjekk om e-posten allerede er registrert
     $sql = "SELECT id FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email_register);
@@ -30,60 +28,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     if ($result->num_rows > 0) {
         $register_error = "Denne e-posten er allerede registrert.";
     } else {
-        // Hash passordet før lagring i databasen
         $hashed_password = password_hash($password_register, PASSWORD_DEFAULT);
-
-        // Sett inn den nye brukeren i databasen
-        $sql = "INSERT INTO users (email, password) VALUES (?, ?)";
+        $sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $email_register, $hashed_password);
+        $stmt->bind_param("sss", $name_register, $email_register, $hashed_password);
 
         if ($stmt->execute()) {
-            // Brukeren er registrert, logg inn brukeren
             $_SESSION['user_email'] = $email_register;
-            header("Location: dashboard.php");  // Redirect til dashboard etter vellykket registrering
+            header("Location: dashboard.php");
             exit();
         } else {
             $register_error = "Noe gikk galt. Prøv igjen.";
         }
     }
 
-    // Lukk forbindelsen
     $stmt->close();
     $conn->close();
 }
 
-// Håndterer pålogging
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
-    // Hent e-post og passord fra skjemaet
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Koble til databasen
     $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
-    // Sjekk om forbindelsen til databasen er vellykket
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Beskytt mot SQL-injeksjon ved å bruke forberedte spørringer
-    $sql = "SELECT id, email, password FROM users WHERE email = ?";
+    $sql = "SELECT id, name, email, password FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Sjekk om brukeren finnes
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        // Verifiser passordet
         if (password_verify($password, $user['password'])) {
-            // Passordet er korrekt, logg inn brukeren
             $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_email'] = $user['email'];
-            header("Location: ../../index.php");  // Redirect til dashboard etter vellykket pålogging
+            header("Location: ../../index.php");
             exit();
         } else {
             $login_error = "Feil passord.";
@@ -92,7 +78,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         $login_error = "Brukeren finnes ikke.";
     }
 
-    // Lukk forbindelsen
     $stmt->close();
     $conn->close();
 }
@@ -106,39 +91,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     <title>Oppdag Norge - Logg Inn</title>
     <link rel="icon" type="image/x-icon" href="../bilder/OppdagNorge.png">
     <link rel="stylesheet" href="../css/login.css">
+    <style>
+        .fade-out {
+            animation: fadeOut 3s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="container">
             <a href="../../index.php" class="logo-link"><img src="../bilder/OppdagNorgemindre.png" alt="Oppdag Norge" class="logo"></a>
             <nav>
-    <ul>
-        <li><a href="fjorder.html">Fjorder</a></li>
-        <li><a href="fjell.html">Fjell</a></li>
-        <li><a href="byer.html">Byer</a></li>
-        <li><a href="om-oss.html">Om Oss</a></li>
-        <?php if (isset($_SESSION['user_email'])): ?>
-            <li><a href="profil.php">Profil</a></li>
-            <li><a href="../htmlogphp/logut.php">Logg ut</a></li>
-        <?php else: ?>
-            <li><a href="Databasenettside/htmlogphp/login.php">Login</a></li>
-        <?php endif; ?>
-    </ul>
-</nav>
-
+                <ul>
+                    <li><a href="fjorder.html">Fjorder</a></li>
+                    <li><a href="fjell.html">Fjell</a></li>
+                    <li><a href="byer.html">Byer</a></li>
+                    <li><a href="om-oss.html">Om Oss</a></li>
+                    <?php if (isset($_SESSION['user_email'])): ?>
+                        <li><a href="profil.php">Profil</a></li>
+                        <li><a href="../htmlogphp/logut.php">Logg ut</a></li>
+                    <?php else: ?>
+                        <li><a href="Databasenettside/htmlogphp/login.php">Login</a></li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <!-- Login form -->
     <div class="form-container" id="login-form">
         <h2>Logg inn</h2>
         <?php if ($login_error): ?>
-            <p style="color: red;"><?php echo $login_error; ?></p>
+            <p style="color: red;" id="loginError"><?php echo $login_error; ?></p>
         <?php endif; ?>
         <form method="POST">
             <div class="form-group">
                 <label for="email">E-post</label>
-                <input type="email" name="email" id="email" placeholder="Skriv inn e-post" required>
+                <input type="email" name="email" id="email" placeholder="Skriv inn e-post" required value="<?php echo htmlspecialchars($email); ?>">
             </div>
             <div class="form-group">
                 <label for="password">Passord</label>
@@ -149,14 +142,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         <p>Har du ikke en konto? <a href="#" id="switchToRegister">Registrer deg</a></p>
     </div>
 
-    <!-- Registration form -->
     <div class="form-container hidden" id="register-form">
         <h2>Registrer deg</h2>
-        <!-- Registreringsskjema kan lages her, for eksempel: -->
+        <?php if ($register_error): ?>
+            <p style="color: red;" id="registerError"><?php echo $register_error; ?></p>
+        <?php endif; ?>
         <form method="POST">
             <div class="form-group">
+                <label for="name_register">Navn</label>
+                <input type="text" name="name_register" id="name_register" placeholder="Skriv inn navn" required>
+            </div>
+            <div class="form-group">
                 <label for="email_register">E-post</label>
-                <input type="email" name="email_register" id="email_register" placeholder="Skriv inn e-post" required>
+                <input type="email" name="email_register" id="email_register" placeholder="Skriv inn e-post" required value="<?php echo htmlspecialchars($email_register); ?>">
             </div>
             <div class="form-group">
                 <label for="password_register">Passord</label>
@@ -167,29 +165,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         <p>Har du allerede en konto? <a href="#" id="switchToLogin">Logg inn</a></p>
     </div>
 
-    
-
-
     <script>
+        const loginError = document.getElementById('loginError');
+        const registerError = document.getElementById('registerError');
+
+        if (loginError) {
+            setTimeout(() => loginError.classList.add('fade-out'), 3000);
+        }
+
+        if (registerError) {
+            setTimeout(() => registerError.classList.add('fade-out'), 3000);
+        }
+
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
         const switchToRegister = document.getElementById('switchToRegister');
         const switchToLogin = document.getElementById('switchToLogin');
 
-        // Bytt til registreringsskjema
         switchToRegister.addEventListener('click', (e) => {
             e.preventDefault();
             loginForm.classList.add('hidden');
             registerForm.classList.remove('hidden');
         });
 
-        // Bytt til login skjema
         switchToLogin.addEventListener('click', (e) => {
             e.preventDefault();
             registerForm.classList.add('hidden');
             loginForm.classList.remove('hidden');
         });
     </script>
-
 </body>
 </html>

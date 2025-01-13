@@ -2,11 +2,6 @@
 session_start();
 ?>
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -50,16 +45,13 @@ session_start();
         </div>
     </header>
 
-
     <main>
         <section id="home" class="hero-section">
             <div class="hero-text">
-            <h1>Velkommen <?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?></h1>
+            <h1>Velkommen <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : ''; ?></h1>
 
             </div>
 
-           
-            
         </section>
         <section id="fjorder" class="content-section">
             <div class="text right">
@@ -84,7 +76,6 @@ session_start();
         </section>
     </main>
 
-    
     <footer>
         <footer>
             <div class="footer-container">
@@ -99,7 +90,12 @@ session_start();
                         <li><a href="fjell.html">Fjell</a></li>
                         <li><a href="#byer.html">Byer</a></li>
                         <li><a href="om-oss.html">Om Oss</a></li>
+                        <?php if (isset($_SESSION['user_email'])): ?>
+                        <li><a href="profil.php">Profil</a></li>
+                        <li><a href="Databasenettside/htmlogphp/logut.php">Logg ut</a></li>
+                    <?php else: ?>
                         <li><a href="Databasenettside/htmlogphp/login.php">Login</a></li>
+                    <?php endif; ?>
 
                     </ul>
                 </div>
@@ -152,7 +148,6 @@ session_start();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 </script>
-
 
 </body>
 </html>

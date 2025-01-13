@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_email'])) {
-    // Hvis brukeren ikke er logget inn, omdiriger til login-siden
+ 
     header("Location: Databasenettside/htmlogphp/login.php");
     exit();
 }

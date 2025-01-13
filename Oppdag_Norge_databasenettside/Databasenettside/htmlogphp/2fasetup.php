@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Koble til databasen
+
 $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ga = new PHPGangsta_GoogleAuthenticator();
         $secret = $ga->createSecret();
 
-        // Lagre Google Authenticator-secret i databasen
+      
         $stmt = $conn->prepare("UPDATE users SET two_fa_enabled = 1, two_fa_code = ? WHERE id = ?");
         $stmt->bind_param("si", $secret, $userId);
         $stmt->execute();
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<a href='dashboard.php'>Tilbake til Dashboard</a>";
         exit();
     } elseif ($method == "email") {
-        // Lagre at e-post er valgt i databasen
+       
         $stmt = $conn->prepare("UPDATE users SET two_fa_enabled = 1, two_fa_code = NULL WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
