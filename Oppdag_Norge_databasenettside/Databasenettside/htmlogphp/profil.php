@@ -34,7 +34,7 @@ if (!isset($_SESSION['user_email'])) {
         </div>
     </header>
     <main>
-        <h1>Velkommen til dashboardet, <?php echo htmlspecialchars($_SESSION['user_email']); ?>!</h1>
+        <h1>Velkommen til dashboardet, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : '';?>!</h1>
         <p>Her kan du få oversikt over dine favoritter, planlagte reiser, eller annen relevant informasjon.</p>
     </main>
 </body>
