@@ -1,23 +1,21 @@
 <?php
 session_start();
-require '../vendor/autoload.php';  // Sørg for at dette er riktig sti
+require '../vendor/autoload.php';
 
 use SendGrid\Mail\Mail;
-use Dotenv\Dotenv;  // Importer Dotenv riktig
+use Dotenv\Dotenv;
 
 $login_error = '';
-$register_error = '';  // Legg til en standardverdi
-$email_register = isset($_POST['email_register']) ? $_POST['email_register'] : '';  // Hent fra POST eller tomt
-$name_register = isset($_POST['name_register']) ? $_POST['name_register'] : '';  // Hent fra POST eller tomt
-$password_register = ''; // Denne kan være tom til den settes i POST
-
+$register_error = '';
+$email_register = '';
 $email = '';
+$two_fa_method = 'email'; // Default 2FA method is set to email
 
-// Last inn token.env-filen
+// Load token.env file
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../', 'token.env');
 $dotenv->load();
 
-// Funksjon for å sende 2FA e-post med SendGrid
+// Function to send 2FA email with SendGrid
 function send_2fa_email($email, $code) {
     $email_send = new Mail();
     $email_send->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);
@@ -26,7 +24,6 @@ function send_2fa_email($email, $code) {
     $email_send->addContent("text/plain", "Din 2FA-kode er: $code");
     $email_send->addContent("text/html", "<strong>Din 2FA-kode er: $code</strong>");
 
-    // Send e-posten via SendGrid
     $sendgrid = new \SendGrid($_ENV['SENDGRID_API_KEY']);
     try {
         $response = $sendgrid->send($email_send);
@@ -38,12 +35,11 @@ function send_2fa_email($email, $code) {
     }
 }
 
-// Innlogging
+// Login process
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Bruk $_ENV for å hente databaseinformasjon
     $conn = new mysqli($_ENV['DB_SERVER'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -54,22 +50,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['pending_user_email'] = $user['email']; // Temporary flag for 2FA
 
-            // Hvis 2FA er aktivert (alltid på), send til verifiseringsside
-            $code = rand(100000, 999999);
-            $_SESSION['2fa_code'] = $code; // Lagre 2FA-koden i session
-            send_2fa_email($email, $code); // Send 2FA-kode
+            // Always require 2FA for login
+            if ($user['two_fa_enabled'] == 1) {
+                $code = rand(100000, 999999);
+                $_SESSION['2fa_code'] = $code; 
+                send_2fa_email($email, $code);
 
-            $_SESSION['pending_user_email'] = $email;
-            header("Location: 2fa_verify.php");
-            exit();
+                header("Location: 2fa_verify.php");
+                exit();
+            } else {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_name'] = $user['name'];
+                header("Location: index.php");
+                exit();
+            }
         } else {
             $login_error = "Feil passord.";
         }
@@ -81,13 +82,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $conn->close();
 }
 
-// Registrering
+// Registration process
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     $name_register = $_POST['name_register'];
     $email_register = $_POST['email_register'];
     $password_register = $_POST['password_register'];
 
-    // Bruk $_ENV for å hente databaseinformasjon
+    // Default 2FA method will be set to email and always enabled
+    $two_fa_method = 'email';
+    $two_fa_enabled = 1;  // 2FA is always enabled for all users
+
     $conn = new mysqli($_ENV['DB_SERVER'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -103,12 +107,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         $register_error = "Denne e-posten er allerede registrert.";
     } else {
         $hashed_password = password_hash($password_register, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (name, email, password, two_fa_enabled) VALUES (?, ?, ?, 1)";
+        $sql = "INSERT INTO users (name, email, password, two_fa_method, two_fa_enabled) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $name_register, $email_register, $hashed_password);
+        $stmt->bind_param("ssssi", $name_register, $email_register, $hashed_password, $two_fa_method, $two_fa_enabled);
 
         if ($stmt->execute()) {
-            // Etter vellykket registrering, send til login-siden
             header("Location: login.php");
             exit();
         } else {
@@ -119,7 +122,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     $stmt->close();
     $conn->close();
 }
-
 ?>
 
 
@@ -128,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oppdag Norge - Logg Inn</title>
+    <title>Logg Inn</title>
     <link rel="icon" type="image/x-icon" href="../bilder/OppdagNorge.png">
     <link rel="stylesheet" href="../css/login.css">
 </head>
@@ -152,9 +154,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             </nav>
         </div>
     </header>
-                        
+
     <!-- Login Form -->
-    <div class="form-container" id="login-form" class="hidden">
+    <div class="form-container" id="login-form">
         <h2>Logg inn</h2>
         <?php if ($login_error): ?>
             <p style="color: red;"><?php echo $login_error; ?></p>
