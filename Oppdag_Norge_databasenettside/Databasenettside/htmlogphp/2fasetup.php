@@ -1,15 +1,23 @@
 <?php
 session_start();
 require_once 'dbconfig.php';
+
+if (!isset($_SESSION['pending_user_email'])) {
+    echo "Ingen e-post er registrert for 2FA.";
+    exit();
+}
+
 $pending_email = $_SESSION['pending_user_email'];
 $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-$sql = "UPDATE users SET two_fa_code = ? WHERE email = ?";
+
 $two_fa_code = rand(100000, 999999);
+$sql = "UPDATE users SET two_fa_code = ? WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ss", $two_fa_code, $pending_email);
 $stmt->execute();
 $stmt->close();
 $conn->close();
+
 ?>
 <!DOCTYPE html>
 <html>
