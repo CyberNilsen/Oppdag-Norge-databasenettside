@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                 $_SESSION['2fa_code'] = $code; 
                 send_2fa_email($email, $code);
 
-                header("Location: 2fa_verify.php");
+                header("Location: send_2fa_email.php");
                 exit();
             } else {
                 $_SESSION['user_id'] = $user['id'];
