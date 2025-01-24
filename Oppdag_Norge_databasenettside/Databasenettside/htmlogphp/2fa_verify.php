@@ -1,13 +1,39 @@
 <?php
 session_start();
+
+if (isset($_SESSION['user_id'])) {
+    header("Location: ../../index.php");
+    exit();
+}
+
 require '../vendor/autoload.php';
 
+use SendGrid\Mail\Mail;
 use Dotenv\Dotenv;
 
 $verification_error = '';
-
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../', 'token.env');
 $dotenv->load();
+
+// Send 2FA email
+function send_2fa_email($email, $code) {
+    $email_send = new Mail();
+    $email_send->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);
+    $email_send->setSubject('Din 2FA-kode');
+    $email_send->addTo($email);
+    $email_send->addContent("text/plain", "Din 2FA-kode er: $code");
+    $email_send->addContent("text/html", "<strong>Din 2FA-kode er: $code</strong>");
+
+    $sendgrid = new \SendGrid($_ENV['SENDGRID_API_KEY']);
+    try {
+        $response = $sendgrid->send($email_send);
+        if ($response->statusCode() != 202) {
+            echo "Feil ved sending av e-post: " . $response->statusCode();
+        }
+    } catch (Exception $e) {
+        echo 'Feil ved sending av e-post: ' . $e->getMessage();
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify'])) {
     $entered_code = $_POST['code'];
@@ -16,35 +42,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify'])) {
         $email = $_SESSION['pending_user_email'];
         unset($_SESSION['2fa_code']);
         unset($_SESSION['pending_user_email']);
-
-        $conn = new mysqli($_ENV['DB_SERVER'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        $sql = "SELECT id, name, email FROM users WHERE email = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $user = $result->fetch_assoc();
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_name'] = $user['name'];
-            header("Location: ../../index.php");
-            exit();
-        } else {
-            $verification_error = "Brukeren finnes ikke.";
-        }
-
-        $stmt->close();
-        $conn->close();
+        $_SESSION['user_id'] = 1; // Example user_id
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_name'] = $user['name'];
+        header("Location: ../../index.php");
+        exit();
     } else {
         $verification_error = "Feil 2FA-kode.";
     }
 }
+
+// Resend functionality
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['resend_code'])) {
+    if (isset($_SESSION['last_sent_time']) && (time() - $_SESSION['last_sent_time']) < 30) {
+        // If 30 seconds haven't passed, show an error
+        $verification_error = "Du må vente 30 sekunder før du kan sende en ny kode.";
+    } else {
+        // Generate a new code and send email
+        $code = rand(100000, 999999);
+        $_SESSION['2fa_code'] = $code;
+
+        $email = $_SESSION['pending_user_email'];
+        send_2fa_email($email, $code);
+
+        // Store the time when the code was sent
+        $_SESSION['last_sent_time'] = time();
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -77,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify'])) {
         </div>
     </header>
 
-    <!-- 2FA Verification Form -->
+    <!-- 2FA verifikasjons Form -->
     <div class="form-container">
         <h2>Verifiser 2FA</h2>
         <?php if ($verification_error): ?>
@@ -90,6 +115,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify'])) {
             </div>
             <button type="submit" name="verify" class="btn">Verifiser</button>
         </form>
+
+        <form method="POST">
+            <button type="submit" name="resend_code" class="btn">Send ny kode</button>
+        </form>
+
     </div>
 </body>
+
 </html>
+

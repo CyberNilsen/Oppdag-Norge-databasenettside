@@ -147,6 +147,7 @@ nav ul li a:hover {
 .btn {
     width: 100%;
     padding: 18px;
+    margin-top: 10px;
     background-color: #007BFF;
     color: white;
     border: none;

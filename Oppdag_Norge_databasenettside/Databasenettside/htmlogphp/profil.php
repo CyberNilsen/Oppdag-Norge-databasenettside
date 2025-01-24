@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_email'])) {
     exit();
 }
 ?>
+<!-- Her så sjekkes det ovenfor om en bruker er satt og den starter også økten. Hvis brukeren ikke er satt så blir du sendt til login.php -->
 
 <!DOCTYPE html>
 <html lang="no">
@@ -39,3 +40,5 @@ if (!isset($_SESSION['user_email'])) {
     </main>
 </body>
 </html>
+
+<!-- Ovenfor er det html kode og du ser også velkommen til dashboard + navnet ditt. 

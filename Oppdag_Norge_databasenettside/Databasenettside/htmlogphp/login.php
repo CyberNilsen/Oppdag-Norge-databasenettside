@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (isset($_SESSION['user_id'])) {
+    header("Location: ../../index.php");
+    exit();
+}
+
 require '../vendor/autoload.php';
 
 use SendGrid\Mail\Mail;
@@ -9,13 +15,11 @@ $login_error = '';
 $register_error = '';
 $email_register = '';
 $email = '';
-$two_fa_method = 'email'; // Default 2FA method is set to email
+$two_fa_method = 'email';
 
-// Load token.env file
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../', 'token.env');
 $dotenv->load();
 
-// Function to send 2FA email with SendGrid
 function send_2fa_email($email, $code) {
     $email_send = new Mail();
     $email_send->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);
@@ -35,7 +39,6 @@ function send_2fa_email($email, $code) {
     }
 }
 
-// Login process
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -54,12 +57,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            $_SESSION['pending_user_email'] = $user['email']; // Temporary flag for 2FA
+            $_SESSION['pending_user_email'] = $user['email'];
 
-            // Always require 2FA for login
             if ($user['two_fa_enabled'] == 1) {
                 $code = rand(100000, 999999);
-                $_SESSION['2fa_code'] = $code; 
+                $_SESSION['2fa_code'] = $code;
                 send_2fa_email($email, $code);
 
                 header("Location: 2fa_verify.php");
@@ -67,30 +69,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             } else {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_name'] = $user['name']; // Nå lagres navnet fra databasen i økten
                 header("Location: index.php");
                 exit();
             }
         } else {
-            $login_error = "Feil passord.";
+            $login_error = "Feil e-postadresse eller passord.";
         }
     } else {
-        $login_error = "Brukeren finnes ikke.";
+        $login_error = "Feil e-postadresse eller passord.";
     }
 
     $stmt->close();
     $conn->close();
 }
 
-// Registration process
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     $name_register = $_POST['name_register'];
     $email_register = $_POST['email_register'];
     $password_register = $_POST['password_register'];
 
-    // Default 2FA method will be set to email and always enabled
     $two_fa_method = 'email';
-    $two_fa_enabled = 1;  // 2FA is always enabled for all users
+    $two_fa_enabled = 1;
 
     $conn = new mysqli($_ENV['DB_SERVER'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     if ($conn->connect_error) {
@@ -123,7 +123,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     $conn->close();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="no">
@@ -159,7 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     <div class="form-container" id="login-form">
         <h2>Logg inn</h2>
         <?php if ($login_error): ?>
-            <p style="color: red;"><?php echo $login_error; ?></p>
+            <p id="login-error" style="color: red;"><?php echo $login_error; ?></p>
         <?php endif; ?>
         <form method="POST">
             <div class="form-group">
@@ -179,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     <div class="form-container hidden" id="register-form">
         <h2>Registrer deg</h2>
         <?php if ($register_error): ?>
-            <p style="color: red;"><?php echo $register_error; ?></p>
+            <p id="register-error" style="color: red;"><?php echo $register_error; ?></p>
         <?php endif; ?>
         <form method="POST">
             <div class="form-group">
@@ -206,7 +205,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
         <p>Har du allerede en konto? <a href="#" id="switchToLogin">Logg inn</a></p>
     </div>
 
-    <!-- JavaScript to switch forms -->
+    <!-- JavaScript for å bytte mellom formsene -->
     <script>
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
@@ -223,6 +222,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             e.preventDefault();
             registerForm.classList.add('hidden');
             loginForm.classList.remove('hidden');
+        });
+
+        window.addEventListener('load', function () {
+            const loginError = document.getElementById('login-error');
+            const registerError = document.getElementById('register-error');
+
+            if (loginError) {
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 5000);
+            }
+
+            if (registerError) {
+                setTimeout(() => {
+                    registerError.style.display = 'none';
+                }, 5000);
+            }
         });
     </script>
 </body>
