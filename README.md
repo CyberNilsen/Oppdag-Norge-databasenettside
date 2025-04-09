@@ -82,3 +82,69 @@ To run **Oppdag-Norge** locally, follow these steps:
 
    ```plaintext
    http://Oppdag_Norge_databasenettside/index.php
+
+## ⚙️ Composer Installation
+
+If you need to install or update **Composer**, follow the steps below:
+
+1. **Check if Composer is installed** by running the following command in your terminal:
+
+    ```bash
+    composer --version
+    ```
+
+2. If Composer is **not installed** or needs to be **updated**, follow these steps:
+
+    - **Install Composer** (if not already installed):
+      
+      - For **Windows**, download and run the installer from [getcomposer.org](https://getcomposer.org/download/).
+      
+      - For **macOS** and **Linux**, run the following command in the terminal:
+
+        ```bash
+        curl -sS https://getcomposer.org/installer | php
+        ```
+
+    - **Update Composer** (if already installed):
+
+      Run this command in your terminal:
+
+      ```bash
+      composer self-update
+      ```
+
+3. Once Composer is installed or updated, you can install the necessary dependencies for this project by running:
+
+    ```bash
+    composer install
+    ```
+
+---
+
+## 🚀 How to Use
+
+1. Clone or download the repository to your local machine.
+2. Set up the `.env` file as described in the setup instructions.
+3. Start XAMPP, configure your MySQL database, and run the website locally.
+4. Register as a user and experience the email functionality with SendGrid.
+
+---
+
+## ⚙️ Technologies Used
+
+- **PHP** (for backend logic)
+- **MySQL** (for database storage)
+- **SendGrid** (for email notifications)
+- **XAMPP** (for local server environment)
+- **GitHub Pages** (for hosting the project documentation)
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+> Developed with curiosity and passion by Andreas (CyberNilsen)
+
