@@ -14,13 +14,14 @@ The core features of the project include:
 - 🔑 User Registration with secure password handling
 - 📧 SendGrid email integration for email notifications
 - 🌐 MySQL Database for storing user data
-- 🧩 More features planned!
 
 ---
 
 ## 🖥️ Screenshot
 
-![Oppdag-Norge Screenshot](https://cybernilsen.github.io/Andreas-Nettside/Images/OppdagNorge.png)
+![image](https://github.com/user-attachments/assets/1f09dc6a-66a8-4faf-9c22-139449258a9b)
+
+
 
 ---
 
