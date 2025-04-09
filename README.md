@@ -69,7 +69,8 @@ To run **Oppdag-Norge** locally, follow these steps:
 
 4. **Move the project folder** to your XAMPP's `htdocs` directory:
 
-   - Path: `C:/xampp/htdocs/Oppdag-Norge/`
+   - Firstly you have to go 3 times into the folder like this: Oppdag-Norge-databasenettside\Oppdag-Norge-databasenettside\Oppdag_Norge_databasenettside then add the third subfolder into htdocs.
+   - Path: `C:/xampp/htdocs/Oppdag_Norge_databasenettside/`
 
 5. **Start the XAMPP servers**:
 
@@ -80,4 +81,4 @@ To run **Oppdag-Norge** locally, follow these steps:
    Navigate to:
 
    ```plaintext
-   http://localhost/Oppdag-Norge/index.php
+   http://Oppdag_Norge_databasenettside/index.php
