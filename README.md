@@ -80,60 +80,68 @@ To run **Oppdag-Norge** locally, follow these steps:
 
    ```plaintext
    http://localhost/Oppdag_Norge_databasenettside/index.php
-⚙️ Composer Installation
-If you need to install or update Composer, follow the steps below:
 
-Check if Composer is installed by running the following command in your terminal:
+## ⚙️ Composer Installation
 
-bash
-Copy
-Edit
-composer --version
-If Composer is not installed or needs to be updated, follow these steps:
+If you need to install or update **Composer**, follow the steps below:
 
-Install Composer (if not already installed):
+1. **Check if Composer is installed** by running the following command in your terminal:
 
-For Windows, download and run the installer from getcomposer.org.
+    ```bash
+    composer --version
+    ```
 
-For macOS and Linux, run the following command in the terminal:
+2. If Composer is **not installed** or needs to be **updated**, follow these steps:
 
-bash
-Copy
-Edit
-curl -sS https://getcomposer.org/installer | php
-Update Composer (if already installed):
+    - **Install Composer** (if not already installed):
+      
+      - For **Windows**, download and run the installer from [getcomposer.org](https://getcomposer.org/download/).
+      
+      - For **macOS** and **Linux**, run the following command in the terminal:
 
-Run this command in your terminal:
+        ```bash
+        curl -sS https://getcomposer.org/installer | php
+        ```
 
-bash
-Copy
-Edit
-composer self-update
-Once Composer is installed or updated, you can install the necessary dependencies for this project by running:
+    - **Update Composer** (if already installed):
 
-bash
-Copy
-Edit
-composer install
-🚀 How to Use
-Clone or download the repository to your local machine.
+      Run this command in your terminal:
 
-Set up the .env file as described in the setup instructions.
+      ```bash
+      composer self-update
+      ```
 
-Start XAMPP, configure your MySQL database, and run the website locally.
+3. Once Composer is installed or updated, you can install the necessary dependencies for this project by running:
 
-Register as a user and experience the email functionality with SendGrid.
+    ```bash
+    composer install
+    ```
 
-⚙️ Technologies Used
-PHP (for backend logic)
+---
 
-MySQL (for database storage)
+## 🚀 How to Use
 
-SendGrid (for email notifications)
+1. Clone or download the repository to your local machine.
+2. Set up the `.env` file as described in the setup instructions.
+3. Start XAMPP, configure your MySQL database, and run the website locally.
+4. Register as a user and experience the email functionality with SendGrid.
 
-XAMPP (for local server environment)
+---
 
-GitHub Pages (for hosting the project documentation)
+# ⚙️ Technologies Used
 
-📜 License
+- **PHP** (for backend logic)
+- **MySQL** (for database storage)
+- **SendGrid** (for email notifications)
+- **XAMPP** (for local server environment)
+- **GitHub Pages** (for hosting the project documentation)
+
+---
+
+# 📜 License
+
 This project is licensed under the [MIT License](LICENSE).
+
+---
+
+> Developed with curiosity and passion by Andreas (CyberNilsen)
