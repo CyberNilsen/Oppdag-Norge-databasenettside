@@ -81,7 +81,6 @@ To run **Oppdag-Norge** locally, follow these steps:
    ```plaintext
    http://localhost/Oppdag_Norge_databasenettside/index.php
 
-
 ## ⚙️ Composer Installation
 
 If you need to install or update **Composer**, follow the steps below:
