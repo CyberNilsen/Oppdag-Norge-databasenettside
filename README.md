@@ -1,26 +1,82 @@
-Hei! Her har jeg laget en nettside med php, html, css og javascript. Jeg har også brukt en env fil i dette tilfelle og hvis du har lyst å få nettside her til å kjøre så må du lage en env fil med api key fra sendgrid. Du må også legge env filen utenfor htmlogphp mappen eller i mappen Databasenettside.  Her er oppsettet du må bruke hvis du vil prøve nettsiden og bruke env fil sånn som meg: 
+# 🔧 Oppdag-Norge
 
-SENDGRID_API_KEY=(Din api nøkkel)
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=587
-SMTP_FROM_EMAIL=(eposten som ble brukt til sendgrid)
-SMTP_FROM_NAME=Oppdag-Norge
+**Oppdag-Norge** is a website developed to explore and learn more about **web development**, **database integration**, and **email automation** – with a primary focus on **PHP**, **MySQL**, and **SendGrid** integration. This project combines practical web development with hands-on learning in backend technologies.
 
-DB_SERVER=localhost
-DB_USERNAME=root
-DB_PASSWORD=
-DB_NAME=oppdagnorge
+> ⚠️ **Important:** This project is intended for **educational purposes only**. Ensure you have proper authorization before running any scripts on your own server.
 
-Deretter må du legge hele mappen Oppdag_Norge_databasenettside i htdocs i XAMPP. Så må du kjøre MySQL og Apache server deretter lage en ny tabell i MySQL med innholdet her:
+---
 
-	1	id Primary	int(6)		UNSIGNED	No	None		AUTO_INCREMENT		
-	2	email	varchar(100)	utf8mb4_general_ci		No	None				
-	3	password	varchar(255)	utf8mb4_general_ci		No	None			
-	4	two_fa_enabled	tinyint(1)			Yes	1			
-	5	two_fa_code	varchar(100)	utf8mb4_general_ci		Yes	NULL			
-	6	reg_date	timestamp			No	current_timestamp()		ON UPDATE CURRENT_TIMESTAMP()	
-	7	name	varchar(255)	utf8mb4_general_ci		No	None			
-	8	two_fa_method	varchar(50)	utf8mb4_general_ci		Yes	email			
-	9	two_fa_expiry	bigint(20)			Yes	NULL			
+## 🧠 What is Oppdag-Norge?
 
- Så skriver du inn urlen: http://localhost/Oppdag-Norge-databasenettside/Oppdag_Norge_databasenettside/index.php så skal nettsiden være oppe og kjøre. Hvis du mangler noen libraries kan det hende at du må installere det selv og sette det opp.
+**Oppdag-Norge** is a personal project created to learn more about **PHP**, **MySQL**, and **SendGrid** for email management. The website includes functionalities like user registration, password hashing, and email notifications.
+
+The core features of the project include:
+- 🔑 User Registration with secure password handling
+- 📧 SendGrid email integration for email notifications
+- 🌐 MySQL Database for storing user data
+- 🧩 More features planned!
+
+---
+
+## 🖥️ Screenshot
+
+![Oppdag-Norge Screenshot](https://cybernilsen.github.io/Andreas-Nettside/Images/OppdagNorge.png)
+
+---
+
+## 📦 Setup Instructions
+
+To run **Oppdag-Norge** locally, follow these steps:
+
+1. **Download** or clone the repository:
+    - Clone the repo:  
+      `git clone https://github.com/cybernilsen/Oppdag-Norge.git`
+  
+2. **Create the `.env` file** in the root directory and include the following configuration:
+
+    ```plaintext
+    SENDGRID_API_KEY=your_sendgrid_api_key
+    SMTP_HOST=smtp.sendgrid.net
+    SMTP_PORT=587
+    SMTP_FROM_EMAIL=your_sendgrid_email@example.com
+    SMTP_FROM_NAME=Oppdag-Norge
+
+    DB_SERVER=localhost
+    DB_USERNAME=root
+    DB_PASSWORD=
+    DB_NAME=oppdagnorge
+    ```
+
+3. **Set up the MySQL Database**:
+
+   - Create a database called `oppdagnorge`.
+   - Create a table for user data with the following structure:
+
+    ```sql
+    CREATE TABLE users (
+        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(100) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        two_fa_enabled TINYINT(1) DEFAULT 1,
+        two_fa_code VARCHAR(100) DEFAULT NULL,
+        reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        name VARCHAR(255) NOT NULL,
+        two_fa_method VARCHAR(50) DEFAULT 'email',
+        two_fa_expiry BIGINT(20) DEFAULT NULL
+    );
+    ```
+
+4. **Move the project folder** to your XAMPP's `htdocs` directory:
+
+   - Path: `C:/xampp/htdocs/Oppdag-Norge/`
+
+5. **Start the XAMPP servers**:
+
+   - Open XAMPP and start **Apache** and **MySQL**.
+
+6. **Access the website**:
+
+   Navigate to:
+
+   ```plaintext
+   http://localhost/Oppdag-Norge/index.php
