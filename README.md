@@ -136,4 +136,4 @@ XAMPP (for local server environment)
 GitHub Pages (for hosting the project documentation)
 
 📜 License
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
