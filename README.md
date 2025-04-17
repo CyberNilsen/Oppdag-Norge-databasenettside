@@ -8,7 +8,7 @@
 
 ## 🧠 What is Oppdag-Norge?
 
-**Oppdag-Norge** is a personal project created to learn more about **PHP**, **MySQL**, and **SendGrid** for email management. The website includes functionalities like user registration, password hashing, and email notifications.
+**Oppdag-Norge** is a school project created to learn more about **PHP**, **MySQL**, and **SendGrid** for email management. The website includes functionalities like user registration, password hashing, and email notifications.
 
 The core features of the project include:
 - 🔑 User Registration with secure password handling
